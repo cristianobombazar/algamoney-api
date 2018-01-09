@@ -3,6 +3,7 @@ package com.algaworks.algamoney.api.resource;
 import java.net.URI;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import com.algaworks.algamoney.api.model.Categoria;
 import com.algaworks.algamoney.api.repository.CategoriaRepository;
@@ -31,7 +32,7 @@ public class CategoriaResource {
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Categoria> save(@RequestBody Categoria categoria, HttpServletResponse response) {
+    public ResponseEntity<Categoria> save(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         categoria = repository.save(categoria);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()

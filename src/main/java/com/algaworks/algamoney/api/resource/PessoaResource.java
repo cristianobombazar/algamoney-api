@@ -50,4 +50,10 @@ public class PessoaResource {
         return ResponseEntity.ok(service.update(id, pessoa));
     }
 
+    @PutMapping("/{id}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePartial(@PathVariable Long id,@RequestBody Boolean ativo){
+        service.updatePartial(id, ativo);
+    }
+
 }

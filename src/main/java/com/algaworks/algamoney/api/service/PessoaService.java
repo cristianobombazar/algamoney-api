@@ -14,11 +14,25 @@ public class PessoaService {
     private PessoaRepository repository;
 
     public Pessoa update(Long id, Pessoa pessoa){
+        Pessoa pessoaSalva = find(id);
+        BeanUtils.copyProperties(pessoa, pessoaSalva, "id");
+        return repository.save(pessoaSalva);
+    }
+
+    public void updatePartial(Long id, Boolean ativo){
+        Pessoa pessoa = find(id);
+        pessoa.setAtivo(ativo);
+        repository.save(pessoa);
+    }
+
+    Pessoa find(Long id) {
         Pessoa pessoaSalva = repository.findOne(id);
         if (pessoaSalva == null){
             throw new EmptyResultDataAccessException(1);
         }
-        BeanUtils.copyProperties(pessoa, pessoaSalva, "id");
-        return repository.save(pessoaSalva);
+        return pessoaSalva;
     }
+
+
+
 }

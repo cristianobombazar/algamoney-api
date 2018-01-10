@@ -13,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 @ControllerAdvice //observa a aplicação
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class AlgaMoneyExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
     MessageSource messageSource;
@@ -52,21 +53,22 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return errors;
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({EmptyResultDataAccessException.class})
+    @ExceptionHandler({EmptyResultDataAccessException.class})
     public ResponseEntity handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request){
         String messageUser      = messageSource.getMessage("recurso.nao-encontrado",null, LocaleContextHolder.getLocale());
         String messageDeveloper = ex.toString();
         return handleExceptionInternal(ex, Arrays.asList(new Error(messageUser, messageDeveloper)), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({DataIntegrityViolationException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
         String messageUser      = messageSource.getMessage("recurso.operacao-nao-permitida",null, LocaleContextHolder.getLocale());
         String messageDeveloper = ExceptionUtils.getRootCauseMessage(ex);
         return handleExceptionInternal(ex, Arrays.asList(new Error(messageUser, messageDeveloper)), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    class Error{
+
+    public static class Error{
 
         private String messageUser;
         private String messageDeveloper;

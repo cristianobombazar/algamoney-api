@@ -1,6 +1,7 @@
 package com.algaworks.algamoney.api.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -12,24 +13,31 @@ public class Lancamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private String descricao;
 
+    @NotNull
     @Column(name = "data_vencimento")
     private LocalDate dataVencimento;
 
     @Column(name = "data_pagamento")
     private LocalDate dataPagamento;
 
+    @NotNull
     private BigDecimal valor;
     private String observacao;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TipoLancamento tipo;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;

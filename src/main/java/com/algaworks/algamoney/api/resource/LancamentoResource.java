@@ -62,4 +62,10 @@ public class LancamentoResource {
         String messageDeveloper = ex.toString();
         return ResponseEntity.badRequest().body(Arrays.asList(new AlgaMoneyExceptionHandler.Error(messageUser, messageDeveloper)));
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        repository.delete(id);
+    }
 }

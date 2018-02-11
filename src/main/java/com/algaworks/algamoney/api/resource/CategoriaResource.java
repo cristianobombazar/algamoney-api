@@ -30,14 +30,14 @@ public class CategoriaResource {
 
     @GetMapping
     //@CrossOrigin(maxAge = 10) //SO PODE FAZER REQUISIÇÃO PARA ESSE RECURSO A CADA 10 SEGUNDOS
-    @PreAuthorize("hasAnyAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasAnyScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasAnyScope('read')")
     public List<Categoria> findAll(){
         return repository.findAll();
     }
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasAnyScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasAnyScope('write')")
     public ResponseEntity<Categoria> save(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         categoria = repository.save(categoria);
         publisher.publishEvent(new ResourceEvent(this, response, categoria.getId()));
@@ -45,7 +45,7 @@ public class CategoriaResource {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasAnyScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasAnyScope('read')")
     public ResponseEntity<Categoria> find(@PathVariable Long id) {
         Categoria categoria = repository.findOne(id);
         return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();

@@ -6,6 +6,7 @@ import com.algaworks.algamoney.api.exception.PessoaInexistenteOuInativaException
 import com.algaworks.algamoney.api.model.Lancamento;
 import com.algaworks.algamoney.api.repository.LancamentoRepository;
 import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
+import com.algaworks.algamoney.api.repository.projection.ResumoLancamento;
 import com.algaworks.algamoney.api.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,20 +43,26 @@ public class LancamentoResource {
     private MessageSource messageSource;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasAnyScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public Page<Lancamento> find(LancamentoFilter filter, Pageable pageable){
         return repository.find(filter, pageable);
     }
 
+    @GetMapping(params = "resumo")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    public Page<ResumoLancamento> findResume(LancamentoFilter filter, Pageable pageable){
+        return repository.findResume(filter, pageable);
+    }
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasAnyScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasAnyScope('read')")
     public ResponseEntity<Lancamento> find(@PathVariable Long id){
         Lancamento lancamento = repository.findOne(id);
         return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasAnyScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasAnyScope('write')")
     public ResponseEntity<Lancamento> save(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response){
         lancamento = service.save(lancamento);
         publisher.publishEvent(new ResourceEvent(this, response, lancamento.getId()));
@@ -71,7 +78,7 @@ public class LancamentoResource {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasAnyScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasAnyScope('write')")
     public void delete(@PathVariable Long id){
         repository.delete(id);
     }

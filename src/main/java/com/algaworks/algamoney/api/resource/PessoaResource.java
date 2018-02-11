@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ public class PessoaResource {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasAnyScope('read')")
     public ResponseEntity<Pessoa> find(@PathVariable Long id) {
         Pessoa pessoa = repository.findOne(id);
         return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
@@ -41,17 +43,20 @@ public class PessoaResource {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasAnyScope('write')")
     public void delete(@PathVariable Long id){
         repository.delete(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasAnyScope('write')")
     public ResponseEntity<Pessoa> update(@PathVariable Long id, @Valid @RequestBody Pessoa pessoa){
         return ResponseEntity.ok(service.update(id, pessoa));
     }
 
     @PutMapping("/{id}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasAnyScope('write')")
     public void updatePartial(@PathVariable Long id,@RequestBody Boolean ativo){
         service.updatePartial(id, ativo);
     }

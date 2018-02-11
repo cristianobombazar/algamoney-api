@@ -12,17 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @RestController
 @RequestMapping("/categoria")
+//@CrossOrigin(maxAge = 10)
 public class CategoriaResource {
 
     @Autowired
@@ -32,6 +28,7 @@ public class CategoriaResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
+    @CrossOrigin(maxAge = 10) //SO PODE FAZER REQUISIÇÃO PARA ESSE RECURSO A CADA 10 SEGUNDOS
     public List<Categoria> findAll(){
         return repository.findAll();
     }
@@ -56,7 +53,7 @@ public class CategoriaResource {
 		List<Categoria> categorias = repository.findAll();
 		return !categorias.isEmpty() ? ResponseEntity.ok(categorias) : ResponseEntity.notFound().build();
 	}
-*/
+
 
 /*	@GetMapping("/outro")
 	public List<Categoria> findAll(){

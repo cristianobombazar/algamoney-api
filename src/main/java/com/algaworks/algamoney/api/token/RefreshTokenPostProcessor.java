@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
-public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
+public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> { //TIPO DE RETORNO. PODE SER TAMBÉM O NOME DO OBJETO DO MEU PROPRIO MODEL.
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -33,12 +33,8 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 
         String refreshToken = body.getRefreshToken().getValue();
         adicionarRefreshTokenNoCookie(refreshToken, req, resp);
-        removerRefreshTokenDoBody(token);
-        return body;
-    }
-
-    private void removerRefreshTokenDoBody(DefaultOAuth2AccessToken token) {
         token.setRefreshToken(null);
+        return body;
     }
 
     private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {

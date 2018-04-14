@@ -12,6 +12,5 @@ public class AlgamoneyApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AlgamoneyApiApplication.class, args);
-		System.out.println(Util.passwordGenerate("admin"));
 	}
 }
